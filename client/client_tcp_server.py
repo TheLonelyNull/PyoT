@@ -61,7 +61,7 @@ class ClientTCPServer:
             callback()
 
     def _on_data_received_wrapper(self, data: bytes):
-        LOGGER.debug(b"Received data: {data}")
+        LOGGER.debug(f"Received data: {data}")
         for callback in self._on_received_callbacks:
             callback(data)
 
