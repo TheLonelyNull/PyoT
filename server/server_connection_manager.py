@@ -35,7 +35,6 @@ class ServerConnectionManager:
             tcp_port = payload["port"]
             client = TCPClient(host=addr[0], port=tcp_port)
             client.register_disconnection_callback(partial(self._handle_tcp_disconnection, addr))
-            client.register_connection_callback(partial(self._handel_new_tcp_connection, client))
             loop = asyncio.get_event_loop()
             loop.create_task(client.start())
             self._connections[addr] = client
@@ -45,7 +44,3 @@ class ServerConnectionManager:
     def _handle_tcp_disconnection(self, addr: tuple[str, int]):
         LOGGER.debug(f"Removing {addr} from connections.")
         self._connections.pop(addr)
-
-    @staticmethod
-    def _handel_new_tcp_connection(client: TCPClient, transport: BaseTransport):
-        client.write(b"Hello World")
