@@ -1,0 +1,30 @@
+[SECURITY]
+serverpublickey = -----BEGIN RSA PUBLIC KEY-----
+	MEgCQQCaZ/ySFHoLt/Pb3AdxTZpTqVfnz+GObwc6U64wU6NaD4Wzq+mFNnU1fp26
+	BdCJITrtSq1irrcd91s/LRVh5931AgMBAAE=
+	-----END RSA PUBLIC KEY-----
+publickey = -----BEGIN RSA PUBLIC KEY-----
+	MEgCQQCq/3VeMxNPa/aLpdk9HD0BZcfu+r2K0sRvY/LsuDJfFw0y6xCpme5C+PCJ
+	kJbZ36OoHIeJ4WbA8uYkwmVkPLvLAgMBAAE=
+	-----END RSA PUBLIC KEY-----
+	
+privatekey = -----BEGIN RSA PRIVATE KEY-----
+	MIIBPQIBAAJBAKr/dV4zE09r9oul2T0cPQFlx+76vYrSxG9j8uy4Ml8XDTLrEKmZ
+	7kL48ImQltnfo6gch4nhZsDy5iTCZWQ8u8sCAwEAAQJAV0JC/03rBbVfO4XnZHLb
+	grIQo5faT1Qcn4cOeNPJqzmn7/CEiJ43iKGADJZEJ3s60s9+9aPRiSBZT9WGdix2
+	MQIjALbtM5B0p8sa6ndHkKozg/IEKGLWx56u7i8/K1BGiWp9fkkCHwDvTmHmj3OI
+	N43OhyF090VJCwLtxIVJboKWES3I+XMCIwCio+GN1Xp+he7joLiJ64Wr/3Bc+LPB
+	ba0OSu7az+xLx0opAh8AuJEprNti7eJ6+pj6Uu4LgASAI8X4TuRuzzM8rs7FAiJ/
+	c+dlM2Dy8Z9fOOKuUVcJmA+yBwpCxwTCP+MiTuh3P8Nw
+	-----END RSA PRIVATE KEY-----
+	
+
+[NETWORK]
+udpbroadcastport = 53179
+tcpserverport = 52179
+udplisteningport = 53179
+
+[APPLICATION]
+loglevel = DEBUG
+clientid = b6ba200e-1a05-494e-972f-9cd74f7dd0f6
+

@@ -1,16 +1,20 @@
 import asyncio
 import logging
 
-from server.server_connection_manager import ServerConnectionManager
-from server.udp_listener import UDPListener
-from server.tcp_client import TCPClient
-
-logging.basicConfig(encoding='utf-8', level=logging.DEBUG)
+from server.config.config_loader import ServerConfigLoader
+from server.network.server_connection_manager import ServerConnectionManager
+from server.network.udp_listener import UDPListener
+from shared.encryption.encryption_manager import EncryptionManager
 
 
 async def main():
-    udp_listener_port = 5555
-    udp_listener = UDPListener(udp_listener_port)
+    encryption_manager = EncryptionManager()
+    config_loader = ServerConfigLoader(encryption_manager)
+    config = config_loader.load_config()
+
+    logging.basicConfig(encoding='utf-8', level=config.log_level)
+
+    udp_listener = UDPListener(config.udp_listening_port)
     connection_manager = ServerConnectionManager(
         udp_listener
     )

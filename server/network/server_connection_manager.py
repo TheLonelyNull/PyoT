@@ -1,12 +1,11 @@
 import asyncio
 import json
 import logging
-from asyncio import BaseTransport
 from functools import partial
 from json import JSONDecodeError
 
-from server.tcp_client import TCPClient
-from server.udp_listener import UDPListener
+from server.network.tcp_client import TCPClient
+from server.network.udp_listener import UDPListener
 
 LOGGER = logging.getLogger(__name__)
 

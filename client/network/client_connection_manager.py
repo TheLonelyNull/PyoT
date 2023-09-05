@@ -1,7 +1,7 @@
 import asyncio
 
-from client.client_tcp_server import ClientTCPServer
-from client.udp_broadcaster import UDPBroadcaster
+from client.network.client_tcp_server import ClientTCPServer
+from client.network.udp_broadcaster import UDPBroadcaster
 
 
 class ClientConnectionManager:
