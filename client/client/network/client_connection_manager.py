@@ -2,9 +2,9 @@ import asyncio
 
 from rsa import PublicKey
 
-from client.network.client_encryption_manager import ClientEncryptionManager
-from client.network.client_tcp_server import ClientTCPServer
-from client.network.udp_broadcaster import UDPBroadcaster
+from client.client.network.client_encryption_manager import ClientEncryptionManager
+from client.client.network.client_tcp_server import ClientTCPServer
+from client.client.network.udp_broadcaster import UDPBroadcaster
 
 
 class ClientConnectionManager:

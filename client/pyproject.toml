@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "pyot"
+name = "pyot-client"
 version = "0.1.0"
 description = ""
 authors = ["Christoff Rossouw <chris.rossou5@gmail.com>"]

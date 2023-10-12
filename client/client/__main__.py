@@ -1,10 +1,10 @@
 import asyncio
 import logging
 
-from client.config.config_loader import ClientConfigLoader
-from client.network.client_connection_manager import ClientConnectionManager
-from client.network.client_tcp_server import ClientTCPServer
-from client.network.udp_broadcaster import UDPBroadcaster
+from client.client.config.config_loader import ClientConfigLoader
+from client.client.network.client_connection_manager import ClientConnectionManager
+from client.client.network.client_tcp_server import ClientTCPServer
+from client.client.network.udp_broadcaster import UDPBroadcaster
 from shared.encryption.encryption_manager import EncryptionManager
 
 
