@@ -29,16 +29,8 @@ class TCPClient:
             self._transport.close()
 
     def _on_connect_wrapper(self, transport: BaseTransport):
-        # Close the connection if no more connections are currently accepted
-        if self._transport:
-            LOGGER.debug(f"Got TCP connection from {transport.get_extra_info('peername')} but was full.")
-            transport.close()
-        else:
-            LOGGER.debug(f"Got new TCP connection from {transport.get_extra_info('peername')}.")
-            self._transport = transport
-
-            for callback in self._on_connected_callbacks:
-                callback(transport)
+        for callback in self._on_connected_callbacks:
+            callback(transport)
 
     def _on_disconnect_wrapper(self):
         LOGGER.debug("Peer disconnected.")

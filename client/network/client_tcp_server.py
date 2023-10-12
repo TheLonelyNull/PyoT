@@ -74,6 +74,12 @@ class ClientTCPServer:
     def register_on_data_received_callback(self, callback: Callable[[bytes], None]):
         self._on_received_callbacks.append(callback)
 
+    def write(self, payload: bytes) -> None:
+        if not self._transport:
+            raise  # TODO handle more gracefully
+
+        self._transport.write(payload)
+
 
 class _TCPServerProtocol(Protocol):
     def __init__(self,

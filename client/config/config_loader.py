@@ -1,3 +1,4 @@
+import logging
 from configparser import ConfigParser
 from dataclasses import dataclass
 from pathlib import Path
@@ -7,12 +8,14 @@ from rsa import PublicKey, PrivateKey
 
 from shared.encryption.encryption_manager import EncryptionManager
 
+LOGGER = logging.getLogger(__name__)
+
 
 @dataclass
 class ClientConfig:
     client_id: str
     log_level: str
-    server_public_key: PublicKey
+    server_public_key: PublicKey | None
     private_key: PrivateKey
     public_key: PublicKey
     udp_broadcast_port: int
@@ -41,8 +44,12 @@ class ClientConfigLoader:
             client_id = str(uuid4())
 
         if not (server_public_key := self._config.get("SECURITY", "ServerPublicKey", fallback=None)):
-            raise ClientConfigError("Server public key not found")
-        server_public_key = PublicKey.load_pkcs1(server_public_key.encode("UTF-8"))
+            LOGGER.warning(
+                "Server public key not found in config file. Will be configured by first server that connects "
+                "successfully."
+            )
+        if server_public_key:
+            server_public_key = PublicKey.load_pkcs1(server_public_key.encode("UTF-8"))
 
         if not (public_key := self._config.get("SECURITY", "PublicKey", fallback=None)) or not (
                 private_key := self._config.get("SECURITY", "PrivateKey", fallback=None)):
@@ -72,22 +79,24 @@ class ClientConfigLoader:
         return config
 
     def write_config(self, config: ClientConfig) -> None:
-        self._config.read_dict(
-            {
-                "SECURITY": {
-                    "ServerPublicKey": config.server_public_key.save_pkcs1().decode('UTF-8'),
-                    "PublicKey": config.public_key.save_pkcs1().decode('UTF-8'),
-                    "PrivateKey": config.private_key.save_pkcs1().decode('UTF-8')
-                },
-                "NETWORK": {
-                    "UDPBroadcastPort": str(config.udp_broadcast_port),
-                    "TCPServerPort": str(config.tcp_server_port)
-                },
-                "APPLICATION": {
-                  "ClientId": config.client_id,
-                  "LogLevel": config.log_level
-                }
+        config_dict = {
+            "SECURITY": {
+                "PublicKey": config.public_key.save_pkcs1().decode('UTF-8'),
+                "PrivateKey": config.private_key.save_pkcs1().decode('UTF-8')
+            },
+            "NETWORK": {
+                "UDPBroadcastPort": str(config.udp_broadcast_port),
+                "TCPServerPort": str(config.tcp_server_port)
+            },
+            "APPLICATION": {
+                "ClientId": config.client_id,
+                "LogLevel": config.log_level
             }
+        }
+        if config.server_public_key:
+            config_dict["SECUREITY"]["ServerPublicKey"] = config.server_public_key.save_pkcs1().decode('UTF-8'),
+        self._config.read_dict(
+            config_dict
         )
         with open(self._path, 'w') as config_file:
             self._config.write(config_file)
