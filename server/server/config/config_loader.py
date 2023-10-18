@@ -4,7 +4,7 @@ from pathlib import Path
 
 from rsa import PublicKey, PrivateKey
 
-from shared.encryption.encryption_manager import EncryptionManager
+from server.utils.encryption_manager import EncryptionManager
 
 
 @dataclass

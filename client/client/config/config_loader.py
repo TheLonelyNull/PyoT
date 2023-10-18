@@ -6,7 +6,7 @@ from uuid import uuid4
 
 from rsa import PublicKey, PrivateKey
 
-from shared.encryption.encryption_manager import EncryptionManager
+from client.utils.encryption_manager import EncryptionManager
 
 LOGGER = logging.getLogger(__name__)
 

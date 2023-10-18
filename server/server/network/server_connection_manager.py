@@ -4,8 +4,8 @@ import logging
 from functools import partial
 from json import JSONDecodeError
 
-from server import TCPClient
-from server import UDPListener
+from server.network.tcp_client import TCPClient
+from server.network.udp_listener import UDPListener
 
 LOGGER = logging.getLogger(__name__)
 

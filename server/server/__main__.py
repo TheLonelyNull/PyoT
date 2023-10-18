@@ -1,10 +1,10 @@
 import asyncio
 import logging
 
-from server.server.config.config_loader import ServerConfigLoader
-from server.server.network.server_connection_manager import ServerConnectionManager
-from server.server.network.udp_listener import UDPListener
-from shared.encryption.encryption_manager import EncryptionManager
+from server.config.config_loader import ServerConfigLoader
+from server.network.server_connection_manager import ServerConnectionManager
+from server.network.udp_listener import UDPListener
+from server.utils.encryption_manager import EncryptionManager
 
 
 async def main():
