@@ -3,13 +3,21 @@ import logging
 from asyncio import Protocol, BaseTransport
 from typing import Callable
 
+from server.network.server_authentication_manager import ServerAuthenticationManager, RejectConnectionCommand, \
+    AcceptMessageCommand, MarkClientAsAuthenticatedCommand, RespondToChallengeCommand
+from server.network.server_encryption_manager import ServerEncryptionManager
+
 LOGGER = logging.getLogger(__name__)
 
 
 class TCPClient:
-    def __init__(self, host: str, port: int):
+    def __init__(self, host: str, port: int, server_authentication_manager: ServerAuthenticationManager,
+                 server_encryption_manager: ServerEncryptionManager):
         self._host = host
         self._port = port
+        self._server_authentication_manager = server_authentication_manager
+        self._server_encryption_manager = server_encryption_manager
+
         self._on_connected_callbacks = []
         self._on_disconnected_callbacks = []
         self._on_received_callbacks = []
@@ -29,19 +37,44 @@ class TCPClient:
             self._transport.close()
 
     def _on_connect_wrapper(self, transport: BaseTransport):
-        for callback in self._on_connected_callbacks:
-            callback(transport)
+        # Send client the server's public key, to start the authentication handshake.
+        self._transport = transport
+        self._transport.write(self._server_encryption_manager.get_server_public_key().save_pkcs1())
+        self._server_authentication_manager.mark_public_key_as_shared()
 
     def _on_disconnect_wrapper(self):
         LOGGER.debug("Peer disconnected.")
         self._transport = None
 
-        for callback in self._on_disconnected_callbacks:
-            callback()
+        if self._server_authentication_manager.is_client_authenticated():
+            for callback in self._on_disconnected_callbacks:
+                callback()
 
     def _on_data_received_wrapper(self, data: bytes):
-        for callback in self._on_received_callbacks:
-            callback(data)
+        LOGGER.debug(f"Received data: {data}")
+
+        authentication_command = self._server_authentication_manager.authenticate_server_message(data)
+        if isinstance(authentication_command, RejectConnectionCommand):
+            self._transport.close()
+            return
+
+        if isinstance(authentication_command, RespondToChallengeCommand):
+            self._transport.write(authentication_command.signed_challenge)
+            return
+
+        # Only notify connection callbacks on challenge success.
+        if isinstance(authentication_command, MarkClientAsAuthenticatedCommand):
+            LOGGER.debug(f"Client Authenticated")
+            for callback in self._on_connected_callbacks:
+                callback(self._transport)
+            return
+
+        # Only notify data callbacks once authenticated.
+        if isinstance(authentication_command, AcceptMessageCommand):
+            decrypted_data = self._server_encryption_manager.decrypt_payload_from_client(data)
+            # Decrypt Payload
+            for callback in self._on_received_callbacks:
+                callback(decrypted_data)
 
     def register_connection_callback(self, callback: Callable[[BaseTransport], None]):
         self._on_connected_callbacks.append(callback)

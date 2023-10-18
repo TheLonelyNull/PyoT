@@ -104,6 +104,7 @@ class ClientTCPServer:
 
         # Only notify connection callbacks on challenge success.
         if isinstance(authentication_command, AcceptChallengeCommand):
+            LOGGER.debug(f"Server Authenticated")
             for callback in self._on_connected_callbacks:
                 callback(self._transport)
 

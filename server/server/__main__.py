@@ -12,11 +12,15 @@ async def main():
     config_loader = ServerConfigLoader(encryption_manager)
     config = config_loader.load_config()
 
-    logging.basicConfig(encoding='utf-8', level=config.log_level)
+    # logging.basicConfig(encoding='utf-8', level=config.log_level)
+    logging.basicConfig(encoding='utf-8', level="DEBUG")
 
     udp_listener = UDPListener(config.udp_listening_port)
+    # TODO tcp client factory
     connection_manager = ServerConnectionManager(
-        udp_listener
+        udp_listener,
+        encryption_manager,
+        config
     )
     await connection_manager.start()
 
