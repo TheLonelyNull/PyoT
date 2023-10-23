@@ -15,8 +15,7 @@ async def main():
     config_loader = ClientConfigLoader(encryption_manager)
     config = config_loader.load_config()
 
-    # logging.basicConfig(encoding='utf-8', level=config.log_level)
-    logging.basicConfig(encoding='utf-8', level="DEBUG")
+    logging.basicConfig(encoding='utf-8', level=config.log_level)
 
     client_encryption_manager = ClientEncryptionManager(config.private_key, config.public_key, config.server_public_key,
                                                         encryption_manager)
