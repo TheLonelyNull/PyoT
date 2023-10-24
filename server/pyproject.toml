@@ -10,6 +10,7 @@ python = "^3.10"
 rsa = "^4.9"
 fastapi = "^0.104.0"
 uvicorn = "^0.23.2"
+yoyo-migrations = "^8.2.0"
 
 
 [build-system]
